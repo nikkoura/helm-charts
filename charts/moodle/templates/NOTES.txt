@@ -1,4 +1,4 @@
 To get moodle user/password:
 
-kubectl get secrets -n {{ .Release.namespace }}  {{ include "moodle.fullname" . }} -o json | jq -r .data.moodleUser | base64 -d
-kubectl get secrets -n {{ .Release.namespace }}  {{ include "moodle.fullname" . }} -o json | jq -r .data.moodlePassword | base64 -d
+kubectl get secrets -n {{ .Release.Namespace }} {{ include "moodle.fullname" . }} -o json | jq -r .data.moodleUser | base64 --decode
+kubectl get secrets -n {{ .Release.Namespace }} {{ include "moodle.fullname" . }} -o json | jq -r .data.moodlePassword | base64 --decode
