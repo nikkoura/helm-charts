@@ -20,6 +20,16 @@ entries:
   postgresql:
   - apiVersion: v2
     appVersion: 9.6.18
+    created: "2020-08-25T14:30:24.395413089Z"
+    description: PostgreSQL database
+    digest: 78780bcb0d7b28f119d18ca2e3ca571b8792f505ad2b9635dc987033138fb0f7
+    name: postgresql
+    type: application
+    urls:
+    - https://github.com/nikkoura/helm-charts/releases/download/postgresql-1.0.1/postgresql-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 9.6.18
     created: "2020-08-25T12:44:46.395477434Z"
     description: PostgreSQL database
     digest: 75b916ced661bbe2b6dc788a0e4538e8ea6a9a49d8e5fb560c4df551367344dd
