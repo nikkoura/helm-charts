@@ -1,0 +1,6 @@
+apiVersion: v2
+name: postgresql
+description: PostgreSQL database
+type: application
+version: 1.0.0
+appVersion: 9.6.18
