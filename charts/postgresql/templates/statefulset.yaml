@@ -74,7 +74,9 @@ spec:
         accessModes:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-        storageClassName: "{{ .Values.persistence.storageClassName }}"
+        {{- if .Values.persistence.storageClassName }}
+        storageClassName: {{ .Values.persistence.storageClassName | quote }}
+        {{- end }}
         {{- with .Values.persistence.resources }}
         resources:
           {{- toYaml . | nindent 10 }}
