@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "moodle.fullname" . }}-data
+  namespace: {{ .Release.Namespace }}
+  labels:
+  {{- include "moodle.labels" . | nindent 4 }}
+spec:
+  storageClassName: {{ .Values.persistence.storageClassName }}
+  {{- with .Values.persistence.accessModes }}
+  accessModes:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.persistence.resources }}
+  resources:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}

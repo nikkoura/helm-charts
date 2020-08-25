@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "moodle.fullname" . }}
+  labels:
+    {{- include "moodle.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "moodle.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "moodle.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "moodle.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+          - name: LANG
+            value: "{{ .Values.language.encoding }}"
+          - name: LANGUAGE
+            value: "{{ .Values.language.language }}"
+          - name: SITE_URL
+            value: "https://{{ .Values.site.url }}"
+          - name: SSLPROXY
+            value: "true"
+          - name: DB_TYPE
+            value: pgsql
+          - name: DB_HOST
+            value: {{ template "moodle.postgresql.fullname" . }}
+          - name: DB_PORT
+            value: "{{ .Values.postgresql.service.port }}" 
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "moodle.postgresql.fullname" . }}
+                key: "pgUser"
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "moodle.postgresql.fullname" . }}
+                key: "pgUser"
+          - name: DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "moodle.postgresql.fullname" . }}
+                key: "pgPassword"
+          - name: MOODLE_EMAIL
+            value: "{{ .Values.mail.adminAddress }}"
+          - name: MOODLE_MAIL_NOREPLY_ADDRESS
+            value: "{{ .Values.mail.noReplyAddress }}"
+          - name: MOODLE_MAIL_PREFIX
+            value: "{{ .Values.mail.subjectPrefix }}"
+          - name: SMTP_HOST
+            value: "{{ .Values.mail.smtp.host }}"
+          - name: SMTP_PORT
+            value: "{{ .Values.mail.smtp.port }}"
+          - name: SMTP_PROTOCOL
+            value: "{{ .Values.mail.smtp.protocol }}"
+          - name: SMTP_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "moodle.fullname" . }}
+                key: "smtpUser"
+          - name: SMTP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "moodle.fullname" . }}
+                key: "smtpPassword"
+          - name: MOODLE_LANGUAGE
+            value: "{{ .Values.language.siteLanguage }}"
+          - name: MOODLE_SITENAME
+            value: "{{ .Values.site.name }}"
+          - name: MOODLE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "moodle.fullname" . }}
+                key: "moodleUser"
+          - name: MOODLE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "moodle.fullname" . }}
+                key: "moodlePassword"
+          - name: MOODLE_DATAROOT
+            value: "/var/www/moodledata/data/"
+          volumeMounts:
+            - mountPath: "/var/www/moodledata"
+              name: moodle-data
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: moodle-data
+          persistentVolumeClaim:
+            claimName: {{ include "moodle.fullname" . }}-data
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
