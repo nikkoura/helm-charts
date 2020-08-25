@@ -6,7 +6,9 @@ metadata:
   labels:
   {{- include "moodle.labels" . | nindent 4 }}
 spec:
-  storageClassName: {{ .Values.persistence.storageClassName }}
+  {{- if .Values.persistence.storageClassName  }}
+  storageClassName: {{ .Values.persistence.storageClassName | quote }}
+  {{- end }}
   {{- with .Values.persistence.accessModes }}
   accessModes:
   {{- toYaml . | nindent 4 }}
