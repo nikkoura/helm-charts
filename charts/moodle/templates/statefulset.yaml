@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "moodle.fullname" . }}
   labels:
@@ -9,6 +9,7 @@ spec:
   selector:
     matchLabels:
       {{- include "moodle.selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "moodle.fullname" . }}
   template:
     metadata:
     {{- with .Values.podAnnotations }}
@@ -124,3 +125,18 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  volumeClaimTemplates:
+    - metadata:
+        name: moodle-data
+      spec:
+        {{- with .Values.persistence.accessModes }}
+        accessModes:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- if .Values.persistence.storageClassName }}
+        storageClassName: {{ .Values.persistence.storageClassName | quote }}
+        {{- end }}
+        {{- with .Values.persistence.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
