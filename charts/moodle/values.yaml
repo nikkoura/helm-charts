@@ -8,7 +8,7 @@ image:
   repository: nikkoura/alpine-moodle
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "dataroot-env-var"
+  # tag: "3.9.2"
 
 imagePullSecrets: []
 nameOverride: ""
