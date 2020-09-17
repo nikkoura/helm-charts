@@ -3,6 +3,22 @@ entries:
   moodle:
   - apiVersion: v2
     appVersion: 3.9.2
+    created: "2020-09-17T22:06:41.380975969Z"
+    dependencies:
+    - name: postgresql
+      repository: https://nikkoura.github.io/helm-charts/
+      version: "1"
+    description: Moodle is a learning platform designed to provide educators, administrators
+      and learners with a single robust, secure and integrated system to create personalised
+      learning environments.
+    digest: d43c9bea388adf3ec926967d398094ccb3a87a25728b73a01cba7370477c2c02
+    name: moodle
+    type: application
+    urls:
+    - https://github.com/nikkoura/helm-charts/releases/download/moodle-1.2.2/moodle-1.2.2.tgz
+    version: 1.2.2
+  - apiVersion: v2
+    appVersion: 3.9.2
     created: "2020-09-17T22:04:30.670149356Z"
     dependencies:
     - name: postgresql
