@@ -4,9 +4,9 @@ description: Moodle is a learning platform designed to provide educators, admini
 
 type: application
 
-version: 1.1.1
+version: 1.2.1
 
-appVersion: 3.9.1
+appVersion: 3.9.2
 
 dependencies: 
   - name: postgresql
