@@ -1,5 +1,16 @@
 apiVersion: v1
 entries:
+  argotunnel:
+  - apiVersion: v2
+    appVersion: 2020.11.4
+    created: "2020-12-30T22:25:15.634477803Z"
+    description: Cloudflare Argo Tunnel
+    digest: 57036927f122737ed9cadc8d20dd660b1ece2bdf9713711c79cba64c80fc5eea
+    name: argotunnel
+    type: application
+    urls:
+    - https://github.com/nikkoura/helm-charts/releases/download/argotunnel-1.0.0/argotunnel-1.0.0.tgz
+    version: 1.0.0
   moodle:
   - apiVersion: v2
     appVersion: 3.9.2
