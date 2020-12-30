@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "argotunnel.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "argotunnel.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "argotunnel.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "argotunnel.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: tunnel
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: TUNNEL_HOSTNAME
+          value: {{ .Values.tunnel.hostName }}
+        - name: TUNNEL_URL
+          value: {{ .Values.tunnel.destinationUrl | quote }}
+        - name: TUNNEL_LB_POOL
+          value: {{ .Values.tunnel.loadBalancerPoolName }}
+        - name: TUNNEL_RETRIES
+          value: {{ .Values.tunnel.retries | quote }}
+        volumeMounts:
+          - mountPath: /etc/cloudflared
+            name: tunnel-cert
+            readOnly: true
+      volumes:
+        - name: tunnel-cert
+          secret:
+            secretName: {{ .Values.zoneCertSecret.name }}
+      nodeSelector:
+      {{- with .Values.nodeSelector }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,17 @@
+
+Argo tunnel created.
+
+Public end FQDN: {{ .Values.tunnel.hostName }}
+Private end forwarded to: {{ .Values.tunnel.destinationUrl }}
+Load balancer pool name: {{ .Values.tunnel.loadBalancerPoolName }}
+
+*** IMPORTANT: ***
+A secret named {{ .Values.zoneCertSecret.name }} must exist in the {{ .Release.Namespace }} namespace.
+
+This secret must contain the cert.pem file associated with the zone.
+
+For instructions on how to generate the cert.pem file, see:
+https://developers.cloudflare.com/argo-tunnel/quickstart
+
+For instructions on how to generate a secret from a file, see:
+https://kubernetes.io/docs/tasks/configmap-secret/managing-secret-using-kubectl/#create-a-secret

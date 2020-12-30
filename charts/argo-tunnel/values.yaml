@@ -1,0 +1,97 @@
+# Default values for argotunnel.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Tunnel settings
+tunnel:
+  # FQDN of the public end of the tunnel (will be automatically created and maintained
+  # by Cloudfare in your DNS zone)
+  hostName: tunnel.foobar.com
+
+  # Cloudflare-managed load balancer name to which this tunnel will be added as
+  # a destination (actually, each tunnel will be seen as multiple geographic
+  # destinations in the LB management interface, but count only as one, billing-wise.)
+  loadBalancerPoolName: foobar-lb
+
+  # Destination of the private end of the tunnel.
+  # If targeting a kubernetes service, specify its URL as in the example.
+  # (see https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#services )
+  # Suggestion: use an edge router (like Traefik) to route traffic to different services,
+  # depending on requested hostname; combine this with CNAME entries in the cloudflare
+  # DNS zone pointing on the tunnel public hostname, to enable these hostnames.
+  destinationUrl: "http://<servicename>.<namespace>.svc.cluster.local:80"
+
+  retries: 5
+
+# A secret with this name must exist in the namespace this chart is deployed to.
+# The secret must contain the cert.pem file associated with the zone.
+# See https://developers.cloudflare.com/argo-tunnel/quickstart for instructions
+# on how to generate the cert.pem file, and see
+# https://kubernetes.io/docs/tasks/configmap-secret/managing-secret-using-kubectl/#create-a-secret
+# for instructions to create the secret from a file.
+zoneCertSecret:
+  name: foobar.com
+
+replicaCount: 1
+
+image:
+  repository: msnelling/cloudflared
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "2020.11.4"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+securityContext:
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  runAsNonRoot: true
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+  # To create an anti-affinity rule to avoid multiple replicas on the same node,
+  # uncomment the following lines, set the release name where indicated, and remove
+  # the curly braces after 'affinity:'.
+  # podAntiAffinity:
+  #   requiredDuringSchedulingIgnoredDuringExecution:
+  #     - labelSelector:
+  #         matchExpressions:
+  #           - key: "app.kubernetes.io/name"
+  #             operator: In
+  #             values:
+  #             - argotunnel
+  #           - key: "app.kubernetes.io/instance"
+  #             operator: In
+  #             values:
+  #             - <<insert chosen release name>>
+  #       topologyKey: "kubernetes.io/hostname"

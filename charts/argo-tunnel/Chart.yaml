@@ -1,0 +1,6 @@
+apiVersion: v2
+name: argotunnel
+description: Cloudflare Argo Tunnel
+type: application
+version: 1.0.0
+appVersion: 2020.11.4

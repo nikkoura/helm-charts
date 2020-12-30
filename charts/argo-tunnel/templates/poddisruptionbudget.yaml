@@ -1,0 +1,12 @@
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "argotunnel.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "argotunnel.selectorLabels" . | nindent 4 }}
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      {{- include "argotunnel.selectorLabels" . | nindent 6 }}
