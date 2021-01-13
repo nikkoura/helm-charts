@@ -56,10 +56,10 @@ serviceAccount:
 podAnnotations: {}
 
 securityContext:
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
   runAsNonRoot: true
 
 resources: {}
