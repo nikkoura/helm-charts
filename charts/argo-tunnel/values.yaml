@@ -11,6 +11,8 @@ tunnel:
   # Cloudflare-managed load balancer name to which this tunnel will be added as
   # a destination (actually, each tunnel will be seen as multiple geographic
   # destinations in the LB management interface, but count only as one, billing-wise.)
+  # You can include $(POD_NAME) or $(NODE_NAME) in this value to dynamically use
+  # the corresponding element.
   loadBalancerPoolName: foobar-lb
 
   # Destination of the private end of the tunnel.
