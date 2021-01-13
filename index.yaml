@@ -3,6 +3,16 @@ entries:
   argotunnel:
   - apiVersion: v2
     appVersion: 2020.11.4
+    created: "2021-01-13T20:25:28.389164853Z"
+    description: Cloudflare Argo Tunnel
+    digest: 1d9ff0ae0b4a026f9f7343162a2bae5dd263cd59a894c7236e9f6b8c68636e35
+    name: argotunnel
+    type: application
+    urls:
+    - https://github.com/nikkoura/helm-charts/releases/download/argotunnel-1.0.1/argotunnel-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 2020.11.4
     created: "2020-12-30T22:25:15.634477803Z"
     description: Cloudflare Argo Tunnel
     digest: 57036927f122737ed9cadc8d20dd660b1ece2bdf9713711c79cba64c80fc5eea
