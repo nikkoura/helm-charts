@@ -73,9 +73,9 @@ affinity: {}
 
 ## Storage parameters
 storage:
-  # Consumption volume: this is where files should be uploaded to be consumed by
+  # Consume volume: this is where files should be uploaded to be consumed by
   # Paperless NG.
-  consumption:
+  consume:
     ## Optional - Set persistentVolumenClaimName name to bypass default value
     persistentVolumeClaimName:
 
@@ -87,7 +87,7 @@ storage:
 
     ## Default access mode (ReadWriteMany)
     accessModes:
-      - ReadWriteMany
+      - ReadWriteOnce
 
   # Data volume: this is where Paperless NG will store its internal data
   # (indexes, SQLLite DB, etc)

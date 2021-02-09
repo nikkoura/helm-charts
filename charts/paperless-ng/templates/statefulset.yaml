@@ -84,8 +84,8 @@ spec:
               name: {{ .Values.storage.media.persistentVolumeClaimName | default "media" }}
             - mountPath: /usr/src/paperless/data
               name: {{ .Values.storage.data.persistentVolumeClaimName | default "data" }}
-            - mountPath: /usr/src/paperless/consumption
-              name: {{ .Values.storage.consumption.persistentVolumeClaimName | default "consumption" }}
+            - mountPath: /usr/src/paperless/consume
+              name: {{ .Values.storage.consume.persistentVolumeClaimName | default "consume" }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -127,15 +127,15 @@ spec:
           requests:
             storage: {{ required "Required: .Values.storage.data.requestedSize" .Values.storage.data.requestedSize }}
     - metadata:
-        name: {{ .Values.storage.consumption.persistentVolumeClaimName | default "consumption" }}
+        name: {{ .Values.storage.consume.persistentVolumeClaimName | default "consume" }}
       spec:
-        {{- with .Values.storage.consumption.accessModes }}
+        {{- with .Values.storage.consume.accessModes }}
         accessModes:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-        {{- if .Values.storage.consumption.className }}
-        storageClassName: {{ .Values.storage.consumption.className | quote }}
+        {{- if .Values.storage.consume.className }}
+        storageClassName: {{ .Values.storage.consume.className | quote }}
         {{- end }}
         resources:
           requests:
-            storage: {{ required "Required: .Values.storage.consumption.requestedSize" .Values.storage.consumption.requestedSize }}
+            storage: {{ required "Required: .Values.storage.consume.requestedSize" .Values.storage.consume.requestedSize }}
