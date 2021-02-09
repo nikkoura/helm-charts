@@ -96,6 +96,21 @@ entries:
     urls:
     - https://github.com/nikkoura/helm-charts/releases/download/moodle-1.0.0/moodle-1.0.0.tgz
     version: 1.0.0
+  paperless-ng:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2021-02-09T14:36:57.190616845Z"
+    dependencies:
+    - name: redis
+      repository: https://groundhog2k.github.io/helm-charts
+      version: 0.2.9
+    description: Paperless NG Helm Chart.
+    digest: 1b0323121df8a29e8a4ad0f9e607c7163a2a137b5f81cbb0a38eb1c1da7b3735
+    name: paperless-ng
+    type: application
+    urls:
+    - https://github.com/nikkoura/helm-charts/releases/download/paperless-ng-1.0.1/paperless-ng-1.0.1.tgz
+    version: 1.0.1
   postgresql:
   - apiVersion: v2
     appVersion: 9.6.18
