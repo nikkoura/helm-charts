@@ -1,0 +1,141 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "paperless-ng.fullname" . }}
+  labels:
+    {{- include "paperless-ng.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "paperless-ng.selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "paperless-ng.fullname" . }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "paperless-ng.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "paperless-ng.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /
+              port: 8000
+            failureThreshold: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+          env:
+            - name: PAPERLESS_REDIS
+              value: "redis://{{ include "call-nested" (list . "redis" "redis.fullname") }}:6379"
+            {{- with .Values.paperless.fileNameFormat }}
+            - name: PAPERLESS_FILENAME_FORMAT
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.paperless.ocr.languages }}
+            - name: PAPERLESS_OCR_LANGUAGE
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.paperless.ocr.mode }}
+            - name: PAPERLESS_OCR_MODE
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.paperless.ocr.outputType }}
+            - name: PAPERLESS_OCR_OUTPUT_TYPE
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.paperless.ocr.pages }}
+            - name: PAPERLESS_OCR_PAGES
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.paperless.ocr.imageDpi }}
+            - name: PAPERLESS_OCR_IMAGE_DPI
+              value: {{ . | quote }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /usr/src/paperless/media
+              name: {{ .Values.storage.media.persistentVolumeClaimName | default "media" }}
+            - mountPath: /usr/src/paperless/data
+              name: {{ .Values.storage.data.persistentVolumeClaimName | default "data" }}
+            - mountPath: /usr/src/paperless/consumption
+              name: {{ .Values.storage.consumption.persistentVolumeClaimName | default "consumption" }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.storage.media.persistentVolumeClaimName | default "media" }}
+      spec:
+        {{- with .Values.storage.media.accessModes }}
+        accessModes:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- if .Values.storage.media.className }}
+        storageClassName: {{ .Values.storage.media.className | quote }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ required "Required: .Values.storage.media.requestedSize" .Values.storage.media.requestedSize }}
+    - metadata:
+        name: {{ .Values.storage.data.persistentVolumeClaimName | default "data" }}
+      spec:
+        {{- with .Values.storage.data.accessModes }}
+        accessModes:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- if .Values.storage.data.className }}
+        storageClassName: {{ .Values.storage.data.className | quote }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ required "Required: .Values.storage.data.requestedSize" .Values.storage.data.requestedSize }}
+    - metadata:
+        name: {{ .Values.storage.consumption.persistentVolumeClaimName | default "consumption" }}
+      spec:
+        {{- with .Values.storage.consumption.accessModes }}
+        accessModes:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- if .Values.storage.consumption.className }}
+        storageClassName: {{ .Values.storage.consumption.className | quote }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ required "Required: .Values.storage.consumption.requestedSize" .Values.storage.consumption.requestedSize }}

@@ -1,0 +1,156 @@
+# Default values for paperless-ng.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: jonaswinkler/paperless-ng
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "1.0.0"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8000
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: paperless.local
+      paths: []
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+## Storage parameters
+storage:
+  # Consumption volume: this is where files should be uploaded to be consumed by
+  # Paperless NG.
+  consumption:
+    ## Optional - Set persistentVolumenClaimName name to bypass default value
+    persistentVolumeClaimName:
+
+    ## Required - Define size of the dynamically created PVC
+    requestedSize:
+
+    ## Optional - Storage class name; default storage class will be used if left empty
+    className:
+
+    ## Default access mode (ReadWriteMany)
+    accessModes:
+      - ReadWriteMany
+
+  # Data volume: this is where Paperless NG will store its internal data
+  # (indexes, SQLLite DB, etc)
+  data:
+    ## Optional - Set persistentVolumenClaimName name to bypass default value
+    persistentVolumeClaimName:
+
+    ## Required - Define size of the dynamically created PVC
+    requestedSize:
+
+    ## Optional - Storage class name; default storage class will be used if left empty
+    className:
+
+    ## Default access mode (ReadWriteOnce)
+    accessModes:
+      - ReadWriteOnce
+
+  # Media volume: this is where Paperless NG will store the PDF generated files.
+  media:
+    ## Optional - Set persistentVolumenClaimName name to bypass default value
+    persistentVolumeClaimName:
+
+    ## Required - Define size of the dynamically created PVC
+    requestedSize:
+
+    ## Optional - Storage class name; default storage class will be used if left empty
+    className:
+
+    ## Default access mode (ReadWriteOnce)
+    accessModes:
+      - ReadWriteOnce
+
+## Redis sub-chart parameters
+redis:
+  # Redis storage
+  storage:
+    ## Required - Define size of the dynamically created PVC
+    requestedSize:
+
+    ## Optional - Storage class name; default storage class will be used if left empty
+    className:
+
+paperless:
+  # Set name format of generated files. For more details, see:
+  # https://paperless-ng.readthedocs.io/en/latest/advanced_usage.html#advanced-file-name-handling
+  # If left empty, paperless will use its default setting.
+  fileNameFormat: ""
+
+  # OCR settings. More information can be found in the Paperless NG documentation:
+  # https://paperless-ng.readthedocs.io/en/latest/configuration.html#ocr-settings
+  ocr:
+    # OCR languages. Multiple values can be set, separated by a + sign.
+    # See https://www.loc.gov/standards/iso639-2/php/code_list.php for a language list.
+    languages: eng
+
+    # OCR behavior in presence of a PDF with a text layer.
+    mode: skip
+
+    # OCR output format
+    outputType: pdfa
+
+    # Number of pages processed by OCR. 0 = all pages.
+    pages: 0
+
+    # Scanner DPI if information is missing in the source file metadata.
+    imageDpi:
