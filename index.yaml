@@ -99,6 +99,20 @@ entries:
   paperless-ng:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2021-02-10T08:31:32.347882691Z"
+    dependencies:
+    - name: redis
+      repository: https://groundhog2k.github.io/helm-charts
+      version: 0.2.9
+    description: Paperless NG Helm Chart.
+    digest: 23d4c0b0e06a9e90fd7f87cf0d308c1113a7b3196eff1778ec842fa166dc6c88
+    name: paperless-ng
+    type: application
+    urls:
+    - https://github.com/nikkoura/helm-charts/releases/download/paperless-ng-1.2.0/paperless-ng-1.2.0.tgz
+    version: 1.2.0
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2021-02-09T17:34:17.959961639Z"
     dependencies:
     - name: redis
