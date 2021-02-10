@@ -154,3 +154,8 @@ paperless:
 
     # Scanner DPI if information is missing in the source file metadata.
     imageDpi:
+
+    # Set polling period, in seconds, of the consume volume. If set to zero,
+    # the linux kernel iNotify feature will be used, which may or may not be
+    # supported by your storage system (NFS does not support it, for instance)
+    consumerPolling: 0

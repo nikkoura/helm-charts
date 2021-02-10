@@ -77,6 +77,10 @@ spec:
             - name: PAPERLESS_OCR_IMAGE_DPI
               value: {{ . | quote }}
             {{- end }}
+            {{- with .Values.paperless.consumerPolling }}
+            - name: PAPERLESS_CONSUMER_POLLING
+              value: {{ . | quote }}
+            {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
