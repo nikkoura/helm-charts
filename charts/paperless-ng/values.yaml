@@ -159,3 +159,25 @@ paperless:
     # the linux kernel iNotify feature will be used, which may or may not be
     # supported by your storage system (NFS does not support it, for instance)
     consumerPolling: 0
+
+## PostgreSQL configuration
+postgres:
+  ## Enable PostgreSQL helm chart for deployment (default: false, SQLite will be used)
+  enabled: false
+
+  ## User database which is created during first startup with user and password
+  userDatabase:
+    ## Database name
+    name: paperless
+    ## Database user
+    user: paperless
+    ## Database password (default: 10 alphanum. random characters)
+    # password:
+
+  # Storage parameters
+  storage:
+    ## Set requestedSize to define a size for a dynamically created PVC
+    requestedSize:
+
+    ## the storage class name
+    className:

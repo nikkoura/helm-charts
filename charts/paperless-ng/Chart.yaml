@@ -2,28 +2,25 @@ apiVersion: v2
 name: paperless-ng
 description: Paperless NG Helm Chart.
 
-# A chart can be either an 'application' or a 'library' chart.
-#
-# Application charts are a collection of templates that can be packaged into versioned archives
-# to be deployed.
-#
-# Library charts provide useful utilities or functions for the chart developer. They're included as
-# a dependency of application charts to inject those utilities and functions into the rendering
-# pipeline. Library charts do not define any templates and therefore cannot be deployed.
+maintainers:
+  - name: Frédéric Aguiard
+    email: frederic.aguiard@gmail.com
+    url: https://github.com/nikkoura/
+
 type: application
 
-# This is the chart version. This version number should be incremented each time you make changes
-# to the chart and its templates, including the app version.
-# Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.2.0
-
-# This is the version number of the application being deployed. This version number should be
-# incremented each time you make changes to the application. Versions are not expected to
-# follow Semantic Versioning. They should reflect the version the application is using.
-# It is recommended to use it with quotes.
-appVersion: "1.0.0"
+version: 2.0.0
+appVersion: 1.1.2
 
 dependencies:
   - name: redis
     version: 0.2.9
     repository: "https://groundhog2k.github.io/helm-charts"
+  - name: postgres
+    version: 0.2.8
+    repository: "https://groundhog2k.github.io/helm-charts"
+    condition: postgres.enabled
+
+sources:
+  - "https://github.com/jonaswinkler/paperless-ng/"
+icon: "https://github.com/jonaswinkler/paperless-ng/raw/master/resources/logo/web/png/Color%20logo%20-%20no%20background.png"
